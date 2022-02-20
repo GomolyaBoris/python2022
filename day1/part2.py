@@ -19,7 +19,3 @@ with open('input.txt', 'r') as input_file:
                     a.write(str(char_count))
 a.close()
 input_file.close()
-
-
-
-#print(str(char_count))
