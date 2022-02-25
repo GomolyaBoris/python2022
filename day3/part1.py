@@ -21,14 +21,14 @@ with open("input.txt") as file:
     elf = file.readline()
 
     location = (0, 0)
-    coordinate = {location: 1}
+    coordinate_visit_counts = {location: 1}
 
     for instruction in elf:
-        current_santa_location = update_current_location(location, instruction)
+        location = update_current_location(location, instruction)
 
-        increment_count_for_location(location, coordinate)
+        increment_count_for_location(location, coordinate_visit_counts)
 
 
 a = open('output1.txt', 'w')
-a.write(str(len(coordinate)))
+a.write(str(len(coordinate_visit_counts)))
 a.close()
