@@ -1,15 +1,15 @@
 from hashlib import md5
 
-input = 'ckczppom'
-n = 1
-a = False
+with open("input.txt", 'r') as f:
+    ff = f.readline()
+    for i in range(9999999):
+        input_hash = ff
+        input_hash = (str(input_hash) + str(i))
 
-while a == False:
-    input_hash = md5((input + str(n)).encode()).hexdigest()
-    if a != True and input_hash[:6] == '000000':
-        out = open('output2.txt', 'w')
-        out.write(str(n))
-        out.close()
-        a = True
+        input_hash = md5((str(input_hash)).encode()).hexdigest()
 
-    n += 1
+        if input_hash[:6] == '000000':
+            out = open('output2.txt', 'w')
+            out.write(str(i))
+            out.close()
+            break
