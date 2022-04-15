@@ -50,7 +50,7 @@ def main():
     if (len(sys.argv) > 1):
         filename = sys.argv[1]
     else:
-        filename = "input2.txt"
+        filename = "input1.txt"
     solver = GateSolver(filename)
     out = open("output2.txt", "w")
     out.write(str(solver.get_wire("a")))
