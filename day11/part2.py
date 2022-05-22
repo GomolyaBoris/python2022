@@ -12,6 +12,13 @@ def next_password(password):
 
 s = open("output1.txt", "r")
 s = s.read()
+while s == next_password(s):
+    s = next_password(s)
+
+s = next_password(s)
+ 
+while s == next_password(s):
+    s = next_password(s)
 
 out = open("output2.txt", "w")
 out.write(str(next_password(s)))
