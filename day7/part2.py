@@ -1,60 +1,63 @@
-import sys
+with open('input.txt') as h:
+    home = h.read().split('\n')
 
-class GateSolver:
-    def __init__(self, filename):
-        self.filename = filename
-        self.operations = {
-            "AND": lambda x, y: self.get_wire(x) & self.get_wire(y),
-            "OR": lambda x, y: self.get_wire(x) | self.get_wire(y),
-            "NOT": lambda x: 0xFFFF & ~(self.get_wire(x)),
-            "RSHIFT": lambda x, y: self.get_wire(x) >> self.get_wire(y),
-            "LSHIFT": lambda x, y: self.get_wire(x) << self.get_wire(y),
-        }
-        self.wire_outputs = {}
-        self.gates = {}
+def bit(inp):
+    if inp in result:
+        return result[inp]
+    if inp not in inputs:
+        return int(inp)
+    k = inputs[inp]
 
-    def get_gates_from_file(self):
-        self.gates = {}
-        try:
-            with open(self.filename, "r") as input_file:
-                for line in input_file.readlines():
-                    line = line.strip()
-                    if (line == ""):
-                        continue
-                    (operands, wire) = line.split(" -> ")
-                    self.gates[wire] = operands.split(" ")
-        except FileNotFoundError:
-            print(" Не найдено")
-        return self.gates
+    parts = k.split(' ')
 
-    def get_wire(self, wire):
-        if len(self.gates.keys()) == 0:
-            self.gates = self.get_gates_from_file()
-            if len(self.gates.keys()) == 0:
-                return None
+    if len(parts) == 1:
+        a, = parts
+        result[inp] = bit(a)
+        return result[inp]
 
-        if (wire.isnumeric()):
-            return int(wire)
+    elif len(parts) == 2:
 
-        if wire not in self.wire_outputs:
-            operands = self.gates[wire]
-            if len(operands) == 1:
-                output = self.get_wire(operands[0])
-            else:
-                gate = operands.pop(-2)
-                output = self.operations[gate](*operands)
-            self.wire_outputs[wire] = output
-        return self.wire_outputs[wire]
+        name,a = parts[0], parts[1]
 
-def main():
-    if (len(sys.argv) > 1):
-        filename = sys.argv[1]
-    else:
-        filename = "input1.txt"
-    solver = GateSolver(filename)
-    out = open("output2.txt", "w")
-    out.write(str(solver.get_wire("a")))
-    out.close()
+        if name =="NOT":
+            result[inp] = ~bit(a)
+            return result[inp]
 
-if __name__ == "__main__":
-    main()
+    elif len(parts) == 3:
+
+        a,name,b =parts[0],parts[1],parts[2]
+
+        if name == "AND":
+            result[inp] = bit(a) & bit(b)
+            return result[inp]
+        elif name =="XOR":
+            result[inp] = bit(a) ^ bit(b)
+            return result[inp]
+        elif name == "OR":
+            result[inp] = bit(a) | bit(b)
+            return result[inp]
+        elif name == "RSHIFT":
+            result[inp] = bit(a) >> bit(b)
+            return  result[inp]
+        elif name == 'LSHIFT':
+            result[inp] = bit(a) << bit(b)
+            return result[inp]
+
+inputs = {}
+result= {}
+
+for k in home:
+
+    d = k.split(' -> ')
+    inp,res = d[0], d[1]
+    inputs[res]= inp
+
+i = bit('a')
+result = dict()
+result['b'] = i
+
+output = open('output2.txt', 'w')
+output.write(str(bit('a')))
+
+output.close()
+h.close()
