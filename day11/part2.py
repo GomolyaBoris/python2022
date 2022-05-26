@@ -1,5 +1,4 @@
 import re
-
 def next_password(password):
     while True:
         password = re.sub(r'([a-y])(z*)$', lambda x: chr(ord(x.group(1))+1) + len(x.group(2))*"a", password)
@@ -10,13 +9,13 @@ def next_password(password):
 
         return password
 
-s = open("output1.txt", "r")
+s = open("input.txt", "r")
 s = s.read()
 while s == next_password(s):
     s = next_password(s)
 
 s = next_password(s)
- 
+
 while s == next_password(s):
     s = next_password(s)
 
