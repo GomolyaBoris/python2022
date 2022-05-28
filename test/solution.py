@@ -1,15 +1,15 @@
 from collections import OrderedDict
 
-with open('input.txt') as f: # открытие файла
+with open('input.txt') as f:  # открытие файла
     N, M = map(int, f.readline().split(' '))
     grid = []
     ships = [('!', '!')]
     remove = []
     a = []
-    for i in range(N): # cоздание сетки
+    for i in range(N):  # cоздание сетки
         b = f.readline()
         grid.append([b[d:d + 1] for d in range(0, len(b) - 1)])
-    for j in range(N): # Поиск горизонтальных тонких кораблей
+    for j in range(N):  # Поиск горизонтальных тонких кораблей
         for i in range(M - 1):
             if grid[j][i] == '1' and grid[j][i + 1] == '1':
                 ships.append([(i, j), (i + 1, j)])
@@ -35,7 +35,7 @@ with open('input.txt') as f: # открытие файла
                     ships[-2].append(ships[-1][1])
                     ships.pop(-1)
     flag = True
-    for g in range(len(ships)): # удаление лишних элементов
+    for g in range(len(ships)):  # удаление лишних элементов
         flag = True
         for k in range(len(remove)):
             for q in range(len(ships[g])):
@@ -45,7 +45,7 @@ with open('input.txt') as f: # открытие файла
         if flag:
             a.append(ships[g])
     ships = a
-    for j in range(N - 1): # поиск широких кораблей
+    for j in range(N - 1):  # поиск широких кораблей
         for i in range(M - 1):
             if grid[j][i] == '1' and grid[j][i + 1] == '1' and grid[j + 1][i] == '1' and grid[j + 1][i + 1] == '1':
                 ships.append([(i, j), (i + 1, j), (i, j + 1), (i + 1, j + 1)])
@@ -53,13 +53,13 @@ with open('input.txt') as f: # открытие файла
                     ships[-2].append(ships[-1][2])
                     ships[-2].append(ships[-1][3])
                     ships.pop(-1)
-    for j in range(1, N - 1): # Поиск одинночные корабли в сетке не включая контур
+    for j in range(1, N - 1):  # Поиск одинночные корабли в сетке не включая контур
         for i in range(1, M - 1):
             if (j != 0 and i != 0) or (j != N and i != 0) or (j != 0 and i != M) or (j != N and i != M):
                 if grid[j][i] == '1' and grid[j][i + 1] == '0' and grid[j + 1][i] == '0' and grid[j][i - 1] == '0' and \
                         grid[j - 1][i] == '0':
                     ships.append([(i, j)])
-    for j in range(N): # Поиск одинночные корабли на контуре сетки
+    for j in range(N):  # Поиск одинночные корабли на контуре сетки
         for i in range(M):
             if j == 0 and i != M - 1 and i != 0:
                 if grid[j][i] == '1' and grid[j + 1][i] == '0' and grid[j][i + 1] == '0' and grid[j][i - 1] == '0':
@@ -88,27 +88,34 @@ with open('input.txt') as f: # открытие файла
 
 d = []
 a.pop(0)
-for i in range(len(a)): # Высчитываем размер
+for i in range(len(a)):  # Высчитываем размер
     if len(a[i]) > 1:
         d.append([int(a[i][-1][0]) - int(a[i][0][0]) + 1, int(a[i][-1][1]) - int(a[i][0][1]) + 1])
     else:
         d.append([1, 1])
 s = []
 q = []
-for i in range(len(d)): # Счёт кораблей с одиннаковым размером
+for i in range(len(d)):  # Счёт кораблей с одиннаковым размером
     c = 1
-    for j in range(len(d) - 1):
+    for j in range(len(d)):
         if i != j and ((d[i][0] == d[j][1] and d[i][1] == d[j][0]) or (d[i][0] == d[j][0] and d[i][1] == d[j][1])):
             if d[i][0] == d[j][1] and d[i][1] == d[j][0]:
                 d[j][1] = d[i][1]
                 d[j][0] = d[i][0]
-            c += 1
 
-    if not d[i] in s: # Не включаем элементы, который повторяются
+            c += 1
+    if d[i][1] > d[i][0]:
+        d[i][1], d[i][0] = d[i][0], d[i][1]
+    if not d[i] in s:  # Не включаем элементы, который повторяются
         s.append(d[i])
         q.append([c, d[i]])
-q.sort()
 
+for i in range(len(q)): # сортируем по второму столбцу
+    for j in range(i, len(q)):
+        if q[i][1][0] > q[j][1][0]:
+            q[i], q[j] = q[j], q[i]
+        if q[i][1][0] == q[j][1][0] and q[i][1][1] > q[j][1][1]:
+            q[i], q[j] = q[j], q[i]
 with open('output.txt', 'w') as f:
-    for i in range(len(q)):  # Выводит сначала размер, потом количество
+    for i in range(len(q)):
         f.write(f'{q[i][1][0]} {q[i][1][1]} {q[i][0]}\n')
